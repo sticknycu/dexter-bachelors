@@ -1,0 +1,31 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: reactive_route
+          uri: http://localhost:9090/reactive
+          predicates:
+            - Path=/reactive/{segment}
+      predicate:
+        cloud-foundry-route-service:
+          enabled: true
+  application:
+    name: dexter-api-gateway
+
+server:
+  port: 3333
+
+#logging:
+#  level:
+#    org.springframework.cloud.gateway=TRACE
+#  pattern:
+#
+
+#spring:
+#  cloud:
+#    gateway:
+#      routes:
+#      - id: path_route
+#        uri: https://example.org
+#        predicates:
+#        - Path=/red/{segment},/blue/{segment}

@@ -1,0 +1,24 @@
+package ro.sticknycu.bachelors.dexter.message
+
+import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.mapping.Document
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
+import java.util.*
+
+@Document("messages")
+class MessageDocument(
+    @Id
+    val _id: UUID? = UUID.randomUUID(),
+    val usernameFrom: String,
+    val content: String,
+    val chatRoomId: UUID,
+//    val saveTime: LocalDateTime = LocalDateTime.now(),
+    val timestamp: Instant = Instant.now().truncatedTo(ChronoUnit.MILLIS)  // Ensure all timestamps are truncated on creation
+) {
+
+    fun isNotFromUser(usernameFrom: String?): Boolean {
+        return this.usernameFrom != usernameFrom
+    }
+}
