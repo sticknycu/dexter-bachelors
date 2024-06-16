@@ -9,20 +9,20 @@ import io.gatling.javaapi.http.HttpDsl.status
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-class ReactiveSimulation : Simulation() {
+class BlockingSimulation : Simulation() {
 
     companion object {
-        private val logger: Logger = LoggerFactory.getLogger(ReactiveSimulation::class.java)
+        private val logger: Logger = LoggerFactory.getLogger(BlockingSimulation::class.java)
     }
 
 
     private val httpProtocol: HttpProtocolBuilder = Predef.http(GatlingConfiguration.loadForTest())
         .baseUrl("http://172.213.171.231/")
 
-    private val imageGenerationBlockingScenario: ScenarioBuilder = CoreDsl.scenario("Image Generation - Reactive Scenario")
+    private val imageGenerationBlockingScenario: ScenarioBuilder = CoreDsl.scenario("Image Generation - Blocking Scenario")
         .exec(
-            HttpDsl.http("Image Generation - Reactive")
-                .get("/reactive/test")
+            HttpDsl.http("Image Generation - Blocking")
+                .get("/blocking/test")
                 .check(status().saveAs("status"))
                 .header("Content-Type", "application/json")
 //                .body(CoreDsl.StringBody(Templates.template))
@@ -56,7 +56,7 @@ class ReactiveSimulation : Simulation() {
     init {
         setUp(
             imageGenerationBlockingScenario.injectOpen(
-                OpenInjectionStep.atOnceUsers(1_000),
+                OpenInjectionStep.atOnceUsers(1_500),
                 CoreDsl.rampUsers(1_000).during(10),
                 CoreDsl.constantUsersPerSec(1_000.0).during(10).randomized()
             ).protocols(httpProtocol::protocol)

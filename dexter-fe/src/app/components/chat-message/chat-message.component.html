@@ -1,11 +1,128 @@
-<div class="flex items-start gap-2.5">
-    <img class="w-8 h-8 rounded-full" src="assets/dexter-logo-removebg-preview.png" alt="Jese image">
-    <div class="flex flex-col w-full max-w-[320px] leading-1.5">
-        <div class="flex items-center space-x-2 rtl:space-x-reverse">
-            <span class="text-sm font-semibold text-gray-900 dark:text-white">Bonnie Green</span>
-            <span class="text-sm font-normal text-gray-500 dark:text-gray-400">11:46</span>
+<div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 flex-1 overflow-y-auto">
+  <div class="space-y-4">
+    <!-- Iterating over messages -->
+    <div *ngFor="let message of messages">
+      <!-- Dexter's messages on the left -->
+      <div class="chat chat-start" *ngIf="message.usernameFrom === 'Dexter'">
+        <div class="chat-image avatar">
+          <div class="w-10 rounded-full">
+            <img alt="Dexter's avatar" src="assets/dexter-logo-removebg-preview.png"/>
+          </div>
         </div>
-        <p class="text-sm font-normal py-2 text-gray-900 dark:text-white"> That's awesome. I think our users will really appreciate the improvements.</p>
-        <span class="text-sm font-normal text-gray-500 dark:text-gray-400">Delivered</span>
+        <div class="chat-header">
+          Dexter
+          <time class="text-xs opacity-50">{{message.time}}</time>
+        </div>
+        <div class="chat-bubble">
+          <ng-container *ngIf="message.originalImage != null">
+            <div class="card w-96 bg-base-100 shadow-xl">
+              <figure>
+                <img [src]="'data:image/png;base64,' + message.originalImage" alt="Original Image" />
+              </figure>
+              <div class="card-body">
+                <h2 class="card-title">Original Image</h2>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="message.cannyImage != null">
+            <div class="card w-96 bg-base-100 shadow-xl">
+              <figure><img [src]="'data:image/png;base64,' + message.cannyImage" alt="Canny Image" /></figure>
+              <div class="card-body">
+                <h2 class="card-title">Canny Image</h2>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="message.generatedImage != null">
+            <div class="card w-96 bg-base-100 shadow-xl">
+              <figure><img [src]="'data:image/png;base64,' + message.generatedImage" alt="Generated Image" /></figure>
+              <div class="card-body">
+                <h2 class="card-title">Generated Image</h2>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+        <div class="chat-footer opacity-50">
+          Delivered
+        </div>
+      </div>
+      <!-- Other users' messages on the right -->
+      <div class="chat chat-end" *ngIf="message.usernameFrom !== 'Dexter'">
+        <div class="chat-image avatar">
+          <div class="w-10 rounded-full">
+            <img alt="User's avatar" src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"/>
+          </div>
+        </div>
+        <div class="chat-header">
+          {{message.usernameFrom}}
+          <time class="text-xs opacity-50">{{message.time}}</time>
+        </div>
+        <div class="chat-bubble">
+          <ng-container *ngIf="message.originalImage != null">
+            <div class="card w-96 bg-base-100 shadow-xl">
+              <figure>
+                <img [src]="'data:image/png;base64,' + message.originalImage" alt="Original Image" />
+              </figure>
+              <div class="card-body">
+                <h2 class="card-title">Original Image</h2>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="message.cannyImage != null">
+            <div class="card w-96 bg-base-100 shadow-xl">
+              <figure><img [src]="'data:image/png;base64,' + message.cannyImage" alt="Canny Image" /></figure>
+              <div class="card-body">
+                <h2 class="card-title">Canny Image</h2>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="message.generatedImage != null">
+            <div class="card w-96 bg-base-100 shadow-xl">
+              <figure><img [src]="'data:image/png;base64,' + message.generatedImage" alt="Generated Image" /></figure>
+              <div class="card-body">
+                <h2 class="card-title">Generated Image</h2>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+        <div class="chat-footer opacity-50">
+          Seen at {{message.time}}
+        </div>
+      </div>
     </div>
+  </div>
+</div>
+
+<!-- Chat bar -->
+<div class="m-2 p-2 border-t-2 border-gray-200 dark:border-gray-700 flex items-center space-x-4 bg-white dark:bg-gray-800">
+  <button class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 m-2" (click)="fileInput.click()">
+    <img class="w-5 h-5 text-gray-500 dark:text-gray-400" src="assets/attach-icon.png" alt="Attach">
+  </button>
+  <div
+    class="flex-1 m-2 p-2 border rounded-lg border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+    (dragover)="onDragOver($event)"
+    (drop)="onDrop($event)"
+  >
+    <ng-container *ngIf="!attachedFile; else attached">
+      Drag and drop files here or click the attach icon to upload
+    </ng-container>
+    <ng-template #attached>
+      <div class="flex items-center space-x-2">
+        <img [src]="attachedFileURL" class="w-10 h-10 cursor-pointer" (click)="visualizeFile()">
+        <button class="p-1 rounded-full bg-red-500 text-white" (click)="removeFile()">
+          X
+        </button>
+      </div>
+    </ng-template>
+  </div>
+  <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;">
+  <button
+    (click)="sendMessage()"
+    class="p-2 m-2 rounded-full bg-gray-500 dark:bg-gray-700 text-white">
+    <img class="w-5 h-5" src="assets/send-logo.png" alt="Click!">
+  </button>
+</div>
+
+<!-- Error notification -->
+<div *ngIf="error" class="error-notification">
+  {{ error }}
 </div>

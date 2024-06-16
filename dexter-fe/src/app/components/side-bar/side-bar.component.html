@@ -12,20 +12,20 @@
     <img src="assets/dexter-logo-removebg-preview.png" class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" alt="Icon">
     <span class="flex-1 ms-3 whitespace-nowrap">Dexter</span>
   </button>
-  <button class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+  <button
+    (click)="createChat()"
+    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
     <img src="assets/new-chat-logo.png" class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" alt="Icon">
   </button>
 </div>
 
-      <ul class="pt-4 mt-4 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
-         <li *ngFor="let chat of chats">
-            <a href="#" class="flex items-center p-2 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group">
-               <p>{{ chat.title }}</p>
-            </a>
-         </li>
-      </ul>
+<ul class="pt-4 mt-4 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
+   <li *ngFor="let chatId of chats">
+      <a [routerLink]="['/chat/', chatId]" class="flex items-center p-2 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group">
+         <p>{{ chatId }}</p>
+      </a>
+   </li>
+</ul>
    </div>
 </aside>
-<app-homepage-chat>
-
-</app-homepage-chat>
+<app-homepage-chat></app-homepage-chat>

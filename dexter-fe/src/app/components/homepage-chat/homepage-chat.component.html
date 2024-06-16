@@ -1,25 +1,7 @@
 <div class="flex flex-col">
   <!-- Main Content -->
   <div class="flex-1 p-4 sm:ml-64 flex flex-col justify-between h-screen">
-    <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 flex-1 overflow-y-auto">
-      <div class="space-y-4">
-        <app-chat-message>
-          <!-- Chat messages go here -->
-        </app-chat-message>
-      </div>
-    </div>
 
-    <!-- Chat bar -->
-    <div class="m-2 p-2 border-t-2 border-gray-200 dark:border-gray-700 flex items-center space-x-4 bg-white dark:bg-gray-800">
-      <button class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 m-2">
-        <img class="w-5 h-5 text-gray-500 dark:text-gray-400"
-             src="assets/attach-icon.png" alt="Drag and Drop">
-      </button>
-      <input type="text" placeholder="Type a message..." class="flex-1 m-2 p-2 border rounded-lg border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
-      <button class="p-2 m-2 rounded-full bg-gray-500 dark:bg-gray-700 text-white">
-        <img class="w-5 h-5"
-          src="assets/send-logo.png" alt="Click!">
-      </button>
-    </div>
+    <router-outlet></router-outlet>
   </div>
 </div>

@@ -8,6 +8,7 @@ export function initializeKeycloak(keycloak: KeycloakService) {
         realm: "chat",
         clientId: "chat-frontend",
       },
+      loadUserProfileAtStartUp: true,
       enableBearerInterceptor: true,
       bearerPrefix: 'Bearer',
       bearerExcludedUrls: ['/assets'],
