@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+service ImageGenerator {
+    rpc GenerateImage (ImageRequest) returns (ImageResponse);
+}
+
+message ImageRequest {
+    bytes image_data = 1;
+}
+
+message ImageResponse {
+    bytes canny_edge = 1;
+    bytes generated_image = 2;
+}

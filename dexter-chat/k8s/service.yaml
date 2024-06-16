@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dexter-chat-reactive-service
+spec:
+  type: ClusterIP
+  ports:
+    - port: 9090
+      targetPort: 9090
+  selector:
+    app: dexter-chat-reactive

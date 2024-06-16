@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: dexter-chat-blocking
+  data:
+    mongodb:
+      uri: mongodb://root:password@mongodb:27017/chats?replicaSet=rs0&retryWrites=true&w=majority
+
+server:
+  port: 9091
+  servlet:
+    context-path: /blocking
+#  server.servlet.context-path=/blocking

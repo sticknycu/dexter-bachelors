@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dexter-chat-reactive
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: dexter-chat-reactive
+  template:
+    metadata:
+      labels:
+        app: dexter-chat-reactive
+    spec:
+      containers:
+      - name: chat-reactive
+        image: docker.io/sticknycu/dexter-chat-reactive:1.2
+        ports:
+        - containerPort: 9090

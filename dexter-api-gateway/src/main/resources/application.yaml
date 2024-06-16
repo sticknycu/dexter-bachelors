@@ -4,22 +4,81 @@ spring:
       routes:
         - id: reactive_route
           uri: http://localhost:9090/reactive
+#          uri: http://dexter-chat-reactive-service:9090/reactive
           predicates:
-            - Path=/reactive/{segment}
+            - Path=/reactive/**
+          filters:
+            - name: CustomAddRequestParameterFilter
+        - id: blocking_route
+          uri: http://localhost:9091/blocking
+#          uri: http://dexter-chat-blocking-service:9091/blocking
+          predicates:
+            - Path=/blocking/**
+          filters:
+            - name: CustomAddRequestParameterFilter
       predicate:
         cloud-foundry-route-service:
           enabled: true
+  security:
+    oauth2:
+#      client:
+#        registration:
+#          keycloak:
+#            client-id: chat-frontend   # Replace with your actual client ID
+##            client-secret: S1szgVwJxlGXGLQZUa45eVmdjwDlde1M  # Replace with your actual client secret
+#            scope: openid
+#            authorization-grant-type: authorization_code
+#            provider: keycloak
+##            redirect-uri: 'http://localhost:8081/login/oauth2/code/{registrationId}'
+#        provider:
+#          keycloak:
+#            issuer-uri: http://localhost:8081/realms/chat
+#            authorization-uri: http://localhost:8081/realms/chat/protocol/openid-connect/auth
+#            token-uri: http://localhost:8081/realms/chat/protocol/openid-connect/token
+#            user-info-uri: http://localhost:8081/realms/chat/protocol/openid-connect/userinfo
+#            jwk-set-uri: http://localhost:8081/realms/chat/protocol/openid-connect/certs
+#            user-name-attribute: preferred_username
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081/realms/chat
   application:
     name: dexter-api-gateway
 
 server:
   port: 3333
 
-#logging:
-#  level:
-#    org.springframework.cloud.gateway=TRACE
-#  pattern:
+
+keycloak:
+  securityConstraints[3]:
+    securityCollections[0]:
+      name: insecure
+      patterns[0]: /test
+  policy-enforcer-config:
+    enforcement-mode: PERMISSIVE
+    paths[0]:
+      name: Insecure Resource
+      path: /test
+      enforcement-mode: DISABLED
+
+#keycloak.securityConstraints[3].securityCollections[0].name=insecure
+#keycloak.securityConstraints[3].securityCollections[0].patterns[0]=/test
 #
+#keycloak.policy-enforcer-config.enforcement-mode=PERMISSIVE
+#keycloak.policy-enforcer-config.paths[0].name=Insecure Resource
+#keycloak.policy-enforcer-config.paths[0].path=/test
+#keycloak.policy-enforcer-config.paths[0].enforcement-mode=DISABLED
+
+logging:
+  level:
+    org.springframework: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.security.web: DEBUG
+    org.springframework.security.oauth2: DEBUG
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.web.reactive.function.client: DEBUG
+    reactor.netty: DEBUG
+    org.springframework.web.reactive.result.method.annotation: DEBUG
 
 #spring:
 #  cloud:

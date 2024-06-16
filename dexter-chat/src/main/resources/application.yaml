@@ -1,0 +1,41 @@
+spring:
+  codec:
+    max-in-memory-size: 50MB
+  webflux:
+    base-path: /reactive
+  application:
+    name: dexter-chat-reactive
+  data:
+    mongodb:
+      uri: mongodb://root:password@127.0.0.1:27017/chats?replicaSet=rs0&retryWrites=true&w=majority
+#      username: root
+#      password: password
+#      authentication-database: admin
+#      auto-index-creation: true
+#      uuid-representation: standard
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+
+grpc:
+  host: localhost
+
+
+
+server:
+  port: 9090
+
+
+logging:
+  level:
+    org.springframework.security: INFO
+    org.springframework.security.web: INFO
+    org.springframework.security.oauth2: INFO
+    org.springframework.cloud.gateway: INFO
+    org.springframework.web.reactive.function.client: INFO
+    org.springframework.web.reactive.result.method.annotation: INFO
+    org.springframework: INFO
+    reactor.netty: INFO

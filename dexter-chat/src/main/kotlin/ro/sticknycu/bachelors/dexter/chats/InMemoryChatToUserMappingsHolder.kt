@@ -8,15 +8,13 @@ import java.util.concurrent.ConcurrentHashMap
 class InMemoryChatToUserMappingsHolder : ChatToUserMappingsHolder {
     private val userNameToChat: MutableMap<String, MutableSet<UUID>> = ConcurrentHashMap()
 
-    override fun putUserToChat(userName: Mono<String>, chatId: UUID): Mono<Boolean> {
-        return userName.map { s: String ->
-            userNameToChat.computeIfAbsent(s) { HashSet() }
-                .add(chatId)
-        }
+    override fun putUserToChat(userName: String, chatId: UUID): Mono<Boolean> {
+        return Mono.just(userNameToChat.computeIfAbsent(userName) { HashSet() }
+            .add(chatId))
     }
 
-    override fun getUserChatRooms(userName: Mono<String>): Mono<Set<UUID>> {
-        return userName.mapNotNull { key: String -> userNameToChat[key] }
+    override fun getUserChatRooms(userName: String): Mono<Set<UUID>> {
+        return userNameToChat[userName]?.toSet()?.let { Mono.just(it) } ?: Mono.just(setOf())
     }
 
     override fun clear(): Flux<UsernameToChatsDocument> {

@@ -18,16 +18,16 @@ class MongoChatToUserMappingsHolder(private val reactiveMongoTemplate: ReactiveM
         private val logger: Logger = LoggerFactory.getLogger(MongoChatToUserMappingsHolder::class.java)
     }
 
-    override fun putUserToChat(userName: Mono<String>, chatId: UUID): Mono<Boolean> {
-        return userName.flatMap { s: String ->
-            val queryUsername = Query.query(Criteria.where("userName").`is`(s))
-            val document = reactiveMongoTemplate.findOne(queryUsername, UsernameToChatsDocument::class.java)
-                .defaultIfEmpty(UsernameToChatsDocument(userName = s, chats = HashSet()))
+    override fun putUserToChat(userName: String, chatId: UUID): Mono<Boolean> {
+        val queryUsername = Query.query(Criteria.where("userName").`is`(userName))
+        val document = reactiveMongoTemplate.findOne(queryUsername, UsernameToChatsDocument::class.java)
+                .defaultIfEmpty(UsernameToChatsDocument(userName = userName, chats = HashSet()))
                 .map { usernameToChatsDocument: UsernameToChatsDocument ->
                     usernameToChatsDocument.addChat(chatId)
                     usernameToChatsDocument
                 }
-            reactiveMongoTemplate.save(document)
+
+        return reactiveMongoTemplate.save(document)
                 .doOnNext { usernameToChatsDocument: UsernameToChatsDocument? ->
                     logger.info(
                         "saving document {}",
@@ -35,13 +35,11 @@ class MongoChatToUserMappingsHolder(private val reactiveMongoTemplate: ReactiveM
                     )
                 }
                 .map { usernameToChatsDocument: UsernameToChatsDocument? -> true }
-        }
     }
 
-    override fun getUserChatRooms(userName: Mono<String>): Mono<Set<UUID>> {
-        return userName.map { username: String -> Query.query(Criteria.where("userName").`is`(username)) }
-            .flatMap { query ->
-                reactiveMongoTemplate.findOne(query, UsernameToChatsDocument::class.java)
+    override fun getUserChatRooms(userName: String): Mono<Set<UUID>> {
+        val query = Query.query(Criteria.where("userName").`is`(userName))
+        return reactiveMongoTemplate.findOne(query, UsernameToChatsDocument::class.java)
                     .doOnNext { usernameToChatsDocument: UsernameToChatsDocument ->
                         logger.info("found user ${usernameToChatsDocument.userName}")
                     }
@@ -49,7 +47,6 @@ class MongoChatToUserMappingsHolder(private val reactiveMongoTemplate: ReactiveM
                     .doOnNext { logger.info("set size ${it.size}") }
                     .defaultIfEmpty(setOf())
                     .doOnNext { logger.info("set size ${it.size}") }
-            }
     }
 
     override fun clear(): Flux<UsernameToChatsDocument> {

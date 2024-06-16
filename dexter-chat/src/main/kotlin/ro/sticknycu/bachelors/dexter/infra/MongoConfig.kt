@@ -5,13 +5,19 @@ import com.mongodb.MongoClientSettings
 import com.mongodb.reactivestreams.client.MongoClient
 import com.mongodb.reactivestreams.client.MongoClients
 import org.bson.UuidRepresentation
+import org.bson.types.Binary
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.convert.converter.Converter
 import org.springframework.data.mongodb.ReactiveMongoDatabaseFactory
 import org.springframework.data.mongodb.ReactiveMongoTransactionManager
+import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration
 import org.springframework.data.mongodb.config.AbstractReactiveMongoConfiguration
+import org.springframework.data.mongodb.core.convert.MongoCustomConversions.MongoConverterConfigurationAdapter
 import org.springframework.data.mongodb.core.mapping.event.LoggingEventListener
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories
+import org.springframework.stereotype.Component
+import org.springframework.web.servlet.function.*
 
 
 @Configuration
@@ -24,11 +30,16 @@ class MongoDBCConfig : AbstractReactiveMongoConfiguration() {
         return "chats"
     }
 
+    override fun configureConverters(adapter: MongoConverterConfigurationAdapter) {
+        adapter.registerConverter(BinaryToStringConverter())
+    }
+
     @Bean
     override fun reactiveMongoClient(): MongoClient {
         return MongoClients.create(MongoClientSettings.builder()
-               .uuidRepresentation(UuidRepresentation.STANDARD)
-               .applyConnectionString(ConnectionString("mongodb://root:password@127.0.0.1:27017,/chats?replicaSet=rs0&authSource=admin&readPreference=primary"))
+             .uuidRepresentation(UuidRepresentation.STANDARD)
+             .applyConnectionString(ConnectionString("mongodb://root:password@127.0.0.1:27017,/chats?replicaSet=rs0&authSource=admin&readPreference=primary"))
+//               .applyConnectionString(ConnectionString("mongodb://root:password@mongodb:27017/chats?replicaSet=rs0&retryWrites=true&w=majority"))
 //               .applyToClusterSettings { builder: ClusterSettings.Builder ->
 //                   builder.requiredReplicaSetName("rs0")
 ////                   builder.requiredClusterType(ClusterType.REPLICA_SET)
@@ -109,4 +120,11 @@ class MongoDBCConfig : AbstractReactiveMongoConfiguration() {
 //        converters.add(BinaryToUUIDConverter())
 //        return MongoCustomConversions(converters)
 //    }
+}
+
+@Component
+class BinaryToStringConverter : Converter<Binary, String> {
+    override fun convert(source: Binary): String {
+        return String(source.data)
+    }
 }

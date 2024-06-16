@@ -25,38 +25,12 @@ class ReactiveSimulation : Simulation() {
                 .get("/reactive/test")
                 .check(status().saveAs("status"))
                 .header("Content-Type", "application/json")
-//                .body(CoreDsl.StringBody(Templates.template))
         )
-
-    internal object Templates {
-        val template = Function<Session, String> { session ->
-            val objectMapper =
-                ObjectMapper()
-
-//            val registerRequest: RegisterRequest = RegisterRequest.builder()
-//                .firstname(generateRandomString())
-//                .lastname(generateRandomString())
-//                .email(generateRandomString())
-//                .password(generateRandomString())
-//                .role(Arrays.stream(Role.values()).findAny().get())
-//                .gender(Gender.MALE)
-//                .address(generateRandomString())
-//                .mobileNumber(generateRandomString())
-//                .build()
-
-            try {
-                return@Function objectMapper.writeValueAsString("")
-            } catch (e: JsonProcessingException) {
-                logger.atError()
-                    .log("An error has occurred while unmarshall object to json.")
-            }.toString()
-        }
-    }
 
     init {
         setUp(
             imageGenerationBlockingScenario.injectOpen(
-                OpenInjectionStep.atOnceUsers(1_000),
+                OpenInjectionStep.atOnceUsers(1_500),
                 CoreDsl.rampUsers(1_000).during(10),
                 CoreDsl.constantUsersPerSec(1_000.0).during(10).randomized()
             ).protocols(httpProtocol::protocol)

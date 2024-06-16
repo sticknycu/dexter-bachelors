@@ -11,8 +11,10 @@ import java.util.*
 class MessageDocument(
     @Id
     val _id: UUID? = UUID.randomUUID(),
-    val usernameFrom: String,
-    val content: String,
+    var usernameFrom: String,
+    val originalImage: String? = null,
+    val cannyImage: ByteArray? = null,
+    val generatedImage: ByteArray? = null,
     val chatRoomId: UUID,
 //    val saveTime: LocalDateTime = LocalDateTime.now(),
     val timestamp: Instant = Instant.now().truncatedTo(ChronoUnit.MILLIS)  // Ensure all timestamps are truncated on creation

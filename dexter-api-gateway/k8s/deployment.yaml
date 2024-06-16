@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dexter-api-gateway
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: dexter-api-gateway
+  template:
+    metadata:
+      labels:
+        app: dexter-api-gateway
+    spec:
+      containers:
+      - name: api-gateway
+        image: docker.io/sticknycu/dexter-api-gateway:1.3
+        ports:
+        - containerPort: 3333

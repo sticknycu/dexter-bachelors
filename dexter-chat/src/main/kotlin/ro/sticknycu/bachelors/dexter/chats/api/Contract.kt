@@ -5,17 +5,8 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.util.*
 
-data class InputMessage(val usernameFrom: String, val content: String, val chatRoomId: UUID)
+data class InputMessage(var content: String, val chatRoomId: UUID)
 
-data class Message(val usernameFrom: String, val content: String, val chatRoomId: UUID, val time: Instant)
+data class Message(val usernameFrom: String, val originalImage: String?, val cannyImage: ByteArray?, val generatedImage: ByteArray?, val chatRoomId: UUID, val time: Instant)
 
 data class Page(val pageNumber: Int, val pageSize: Int)
-
- fun fromMessageDocument(messageDocument: MessageDocument): Message {
-        return Message(
-            messageDocument.usernameFrom,
-            messageDocument.content,
-            messageDocument.chatRoomId,
-            messageDocument.timestamp
-        )
-    }

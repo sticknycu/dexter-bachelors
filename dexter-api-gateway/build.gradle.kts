@@ -23,6 +23,10 @@ repositories {
 extra["springCloudVersion"] = "2023.0.1"
 
 dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+
     implementation("io.gatling:gatling-app:3.10.5")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
