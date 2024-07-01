@@ -3,10 +3,13 @@ spring:
     name: dexter-chat-blocking
   data:
     mongodb:
-      uri: mongodb://root:password@mongodb:27017/chats?replicaSet=rs0&retryWrites=true&w=majority
+      uri: mongodb://root:password@127.0.0.1:27017,/chatsblocking?replicaSet=rs0&authSource=admin&readPreference=primary
 
 server:
   port: 9091
   servlet:
     context-path: /blocking
 #  server.servlet.context-path=/blocking
+
+grpc:
+  host: localhost
