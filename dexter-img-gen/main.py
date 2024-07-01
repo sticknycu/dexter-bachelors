@@ -5,10 +5,10 @@ import numpy as np
 import tensorflow as tf
 import logging
 from concurrent import futures
-from protobuf import image_generator_pb2_grpc
-from protobuf.image_generator_pb2_grpc import add_ImageGeneratorServicer_to_server
-from protobuf.image_generator_pb2 import ImageResponse
 import matplotlib.pyplot as plt
+
+from protobuf.image_generator_pb2 import ImageResponse
+from protobuf.image_generator_pb2_grpc import add_ImageGeneratorServicer_to_server, ImageGeneratorServicer
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
@@ -229,7 +229,7 @@ import io
 from PIL import Image as ImgPIL
 import base64
 
-class ImageGeneratorServicerImpl(image_generator_pb2_grpc.ImageGeneratorServicer):
+class ImageGeneratorServicerImpl(ImageGeneratorServicer):
     def __init__(self, model):
         self.model = model
 

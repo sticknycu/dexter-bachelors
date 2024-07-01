@@ -1,6 +1,7 @@
 package ro.sticknycu.bachelors.dexterchatblocking.chats.read
 
 import io.grpc.ManagedChannelBuilder
+import kotlinx.coroutines.runBlocking
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
@@ -15,13 +16,15 @@ class ImageGeneratorGrpcClient(
 
     private val stub: ImageGeneratorGrpcKt.ImageGeneratorCoroutineStub = ImageGeneratorGrpcKt.ImageGeneratorCoroutineStub(channel)
 
-    suspend fun generateImage(imageData: ByteArray): Map<String, ByteArray> {
+    fun generateImage(imageData: ByteArray): Map<String, ByteArray> {
         val request = ImageGeneratorOuterClass.ImageRequest.newBuilder()
             .setImageData(com.google.protobuf.ByteString.copyFrom(imageData))
             .build()
 
         return run {
-            val response = stub.generateImage(request)
+            val response = runBlocking {
+                stub.generateImage(request)
+            }
 
             val cannyEdgeBase64 = response.cannyEdge.toByteArray()
             val generatedImageBase64 = response.generatedImage.toByteArray()

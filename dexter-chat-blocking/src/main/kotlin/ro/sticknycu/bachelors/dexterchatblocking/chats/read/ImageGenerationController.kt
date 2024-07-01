@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.http.codec.multipart.FilePart
 import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import java.io.ByteArrayOutputStream
 import java.time.Clock
 import java.time.Instant
@@ -32,7 +33,8 @@ class ImageGenerationController {
 class MessageController(
     private val messageRepository: MessageRepository,
     private val imageGeneratorGrpcClient: ImageGeneratorGrpcClient,
-    private val inputMessageMapper: InputMessageMapper
+    private val inputMessageMapper: InputMessageMapper,
+    private val imageGeneratorService: ImageGenerationService
 ) {
     companion object {
         private val logger: Logger = LoggerFactory.getLogger(MessageController::class.java)
@@ -54,17 +56,16 @@ class MessageController(
 //    }
 
     @PostMapping("/process-image", consumes = ["*/*"])
-    fun processImage(@RequestPart("file") file: FilePart): ResponseEntity<Map<String, ByteArray>> =
-        imageGenerationService.processImage(file)
+    fun processImage(@RequestPart("file") file: MultipartFile): ResponseEntity<Map<String, ByteArray>> =
+        imageGeneratorService.processImage(file)
 
     @PostMapping("/send-message")
-    suspend fun handle(@RequestBody inputMessage: InputMessage, @RequestParam("username") username: String): Message? {
+    fun handle(@RequestBody inputMessage: InputMessage, @RequestParam("username") username: String): Message? {
         logger.info("InputMessage: $inputMessage, username: $username")
 //        inputMessage.content = Base64.getDecoder().decode(inputMessage.content).toString()
 
-        withContext(Dispatchers.IO) {
-            messageRepository.save(inputMessageMapper.fromInput(inputMessage, username, null, null))
-        }
+
+        messageRepository.save(inputMessageMapper.fromInput(inputMessage, username, null, null))
 
         val imageMap = imageGeneratorGrpcClient.generateImage(inputMessage.content.toByteArray())
 
@@ -76,13 +77,9 @@ class MessageController(
                           )
         messageDocument.usernameFrom = "Dexter"
 
-        withContext(Dispatchers.IO) {
-            messageRepository.save(inputMessageMapper.fromInput(inputMessage, username, null, null))
-        }
+        messageRepository.save(inputMessageMapper.fromInput(inputMessage, username, null, null))
 
-        return MessageMapper.fromMessageDocument(withContext(Dispatchers.IO) {
-            messageRepository.save(messageDocument)
-        })
+        return MessageMapper.fromMessageDocument(messageRepository.save(inputMessageMapper.fromInput(inputMessage, username, null, null)))
 
 //        return
 //
@@ -152,21 +149,14 @@ object MessageMapper {
 }
 
 @Service
-class ImageGenerationService {
-        fun processImage(file: FilePart): ResponseEntity<Map<String, ByteArray>> =
-        ResponseEntity.ok(file.content()
-            .map { dataBuffer ->
-                val byteArray = ByteArray(dataBuffer.readableByteCount())
-                dataBuffer.read(byteArray)
-                byteArray
-            }
-            .publishOn(Schedulers.boundedElastic())
-            .reduce { byteArray1, byteArray2 ->
-                val outputStream = ByteArrayOutputStream()
-                outputStream.write(byteArray1)
-                outputStream.write(byteArray2)
-                outputStream.toByteArray()
-            }.flatMap {
-                imageGeneratorGrpcClient.generateImage(it)
-            })
+class ImageGenerationService(private val imageGeneratorGrpcClient: ImageGeneratorGrpcClient) {
+    fun processImage(file: MultipartFile): ResponseEntity<Map<String, ByteArray>> {
+        val byteArray = file.bytes
+
+        val base64EncodedString = Base64.getEncoder().encodeToString(byteArray)
+
+        val generatedImage = imageGeneratorGrpcClient.generateImage(base64EncodedString.toByteArray())
+
+        return ResponseEntity.ok(generatedImage)
+    }
 }
