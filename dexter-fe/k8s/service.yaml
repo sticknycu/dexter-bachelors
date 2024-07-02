@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dexter-fe-service
+spec:
+  selector:
+    app: dexter-fe  # This must match the labels of the pods you want to target
+  ports:
+  - protocol: TCP
+    port: 80                # The port the service will be accessed on
+    targetPort: 4200        # The port on the pods to which traffic will be sent
+  type: LoadBalancer        # Makes the service accessible externally through a cloud provider's load balancer

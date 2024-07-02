@@ -3,6 +3,7 @@ spring:
     name: dexter-chat-blocking
   data:
     mongodb:
+#      uri: mongodb://root:password@mongodb-0.mongodb.default.svc.cluster.local:27017,mongodb-1.mongodb.default.svc.cluster.local:27017,mongodb-2.mongodb.default.svc.cluster.local:27017/chatsblocking?replicaSet=rs0&authSource=admin&readPreference=primary
       uri: mongodb://root:password@127.0.0.1:27017,/chatsblocking?replicaSet=rs0&authSource=admin&readPreference=primary
 
 server:
@@ -12,4 +13,17 @@ server:
 #  server.servlet.context-path=/blocking
 
 grpc:
+#  host: dexter-image-generator-service.default.svc.cluster.local
   host: localhost
+  
+logging:
+  level:
+    org.springframework.security: INFO
+    org.springframework.security.web: INFO
+    org.springframework.security.oauth2: INFO
+    org.springframework.cloud.gateway: INFO
+    org.springframework.web.reactive.function.client: INFO
+    org.springframework.web.reactive.result.method.annotation: INFO
+    org.springframework: INFO
+    reactor.netty: INFO
+    io.grpc: INFO

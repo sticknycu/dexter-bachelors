@@ -67,8 +67,8 @@ class GatewayConfig {
     @Bean
     fun corsWebFilter(): CorsWebFilter {
         val corsConfiguration = CorsConfiguration()
-        corsConfiguration.addAllowedOrigin("*") // You can restrict this to specific origins
-        corsConfiguration.addAllowedMethod("*") // Add specific methods if needed
+        corsConfiguration.addAllowedOrigin("*")
+        corsConfiguration.addAllowedMethod("*")
         corsConfiguration.addAllowedHeader("*")
         corsConfiguration.allowCredentials = false
 
@@ -87,7 +87,6 @@ class GatewayConfig {
     @Bean
     fun jwtAuthenticationConverter(): JwtAuthenticationConverter {
         val converter = JwtAuthenticationConverter()
-        // Customize the JWT Authentication Converter if necessary
         return converter
     }
 
@@ -97,7 +96,6 @@ class GatewayConfig {
 class CustomAddRequestParameterFilter : AbstractGatewayFilterFactory<CustomAddRequestParameterFilter.Config>(Config::class.java) {
 
     class Config {
-        // Add any custom configurations if needed
     }
 
     override fun apply(config: Config): GatewayFilter {

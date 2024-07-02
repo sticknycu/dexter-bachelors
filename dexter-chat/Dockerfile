@@ -4,6 +4,9 @@ FROM openjdk:21-jdk-slim as build
 # Set the working directory inside the container
 WORKDIR /workspace/app
 
+# Install necessary tools including protobuf
+RUN apt-get update && apt-get install -y protobuf-compiler
+
 # Copy gradle executable and gradle wrapper
 COPY gradlew .
 COPY gradle gradle

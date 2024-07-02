@@ -69,7 +69,7 @@ protobuf {
 	generatedFilesBaseDir = "$projectDir/src/main/proto/generated"
 	plugins {
 		id("grpc"){
-			artifact = "io.grpc:protoc-gen-grpc-java:1.64.0:osx-x86_64"
+			artifact = "io.grpc:protoc-gen-grpc-java:1.64.0" //:osx-x86_64
 		}
 		id("grpckt") {
 			artifact = "io.grpc:protoc-gen-grpc-kotlin:1.4.1:jdk8@jar"

@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dexter-image-generator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dexter-image-generator
+  template:
+    metadata:
+      labels:
+        app: dexter-image-generator
+    spec:
+      containers:
+      - name: image-generator
+        image: docker.io/sticknycu/dexter-image-generator:1.3 # 1.2
+        ports:
+        - containerPort: 50051

@@ -13,6 +13,7 @@ import org.springframework.http.codec.multipart.FilePart
 //import org.springframework.security.core.annotation.AuthenticationPrincipal
 //import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
@@ -27,6 +28,7 @@ import ro.sticknycu.bachelors.dexter.chats.image.ImageGeneratorGrpcClient
 import java.io.ByteArrayInputStream
 import java.nio.file.Path
 import java.util.Base64
+
 
 @RestController
 class MessageController(

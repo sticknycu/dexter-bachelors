@@ -1,0 +1,8 @@
+grpcio==1.64.0
+grpcio-tools==1.40.0
+tensorflow==2.13.0
+opencv-python==4.9.0.80
+numpy==1.23.5
+matplotlib==3.7.5
+pillow==10.3.0
+grpcio-reflection==1.40.0

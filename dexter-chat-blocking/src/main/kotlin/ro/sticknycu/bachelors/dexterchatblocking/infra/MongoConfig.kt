@@ -28,8 +28,8 @@ class MongoDBCConfig : AbstractMongoClientConfiguration() {
     override fun mongoClient(): MongoClient {
         return MongoClients.create(MongoClientSettings.builder()
              .uuidRepresentation(UuidRepresentation.STANDARD)
-             .applyConnectionString(ConnectionString("mongodb://root:password@127.0.0.1:27017,/chatsblocking?replicaSet=rs0&authSource=admin&readPreference=primary"))
-//               .applyConnectionString(ConnectionString("mongodb://root:password@mongodb:27017/chats?replicaSet=rs0&retryWrites=true&w=majority"))
+//             .applyConnectionString(ConnectionString("mongodb://root:password@mongodb-0.mongodb.default.svc.cluster.local:27017,mongodb-1.mongodb.default.svc.cluster.local:27017,mongodb-2.mongodb.default.svc.cluster.local:27017/chatsblocking?replicaSet=rs0&authSource=admin&readPreference=primary"))
+               .applyConnectionString(ConnectionString("mongodb://root:password@mongodb:27017/chats?replicaSet=rs0&retryWrites=true&w=majority"))
 //               .applyToClusterSettings { builder: ClusterSettings.Builder ->
 //                   builder.requiredReplicaSetName("rs0")
 ////                   builder.requiredClusterType(ClusterType.REPLICA_SET)

@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dexter-fe
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: dexter-fe
+  template:
+    metadata:
+      labels:
+        app: dexter-fe
+    spec:
+      containers:
+      - name: dexter-fe
+        image: docker.io/sticknycu/dexter-fe:1.4
+        ports:
+        - containerPort: 4200

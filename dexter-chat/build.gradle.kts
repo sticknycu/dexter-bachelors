@@ -27,6 +27,7 @@ repositories {
 }
 
 dependencies {
+	// scoate
     runtimeOnly("io.netty:netty-resolver-dns-native-macos:XXX:osx-x86_64")
 
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
@@ -86,6 +87,7 @@ protobuf {
 	generatedFilesBaseDir = "$projectDir/src/main/proto/generated"
 	plugins {
 		id("grpc"){
+//			artifact = "io.grpc:protoc-gen-grpc-java:1.64.0" // :osx-x86_64
 			artifact = "io.grpc:protoc-gen-grpc-java:1.64.0:osx-x86_64"
 		}
 		id("grpckt") {

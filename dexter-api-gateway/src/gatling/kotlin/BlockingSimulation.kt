@@ -22,7 +22,9 @@ class BlockingSimulation : Simulation() {
     private val imageGenerationBlockingScenario: ScenarioBuilder = CoreDsl.scenario("Image Generation - Blocking Scenario")
         .exec(
             HttpDsl.http("Image Generation - Blocking")
-                .get("/blocking/test")
+                .post("/blocking/process-image")
+                .header("Content-Type", "multipart/form-data")
+                .formUpload("file", "/Users/sticknycu/Desktop/original.png")
                 .check(status().saveAs("status"))
                 .header("Content-Type", "application/json")
         )

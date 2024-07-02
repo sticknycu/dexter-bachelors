@@ -22,7 +22,9 @@ class ReactiveSimulation : Simulation() {
     private val imageGenerationBlockingScenario: ScenarioBuilder = CoreDsl.scenario("Image Generation - Reactive Scenario")
         .exec(
             HttpDsl.http("Image Generation - Reactive")
-                .get("/reactive/test")
+                .post("/reactive/process-image")
+                .header("Content-Type", "multipart/form-data")
+                .formUpload("file", "/Users/sticknycu/Desktop/original.png")
                 .check(status().saveAs("status"))
                 .header("Content-Type", "application/json")
         )

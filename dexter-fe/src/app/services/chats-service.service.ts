@@ -8,7 +8,7 @@ import {Time} from "@angular/common";
 })
 export class UserChatService {
 
-  private apiUrl = 'http://localhost:3333/reactive';  // Replace with your actual API gateway URL
+  private apiUrl = 'http://localhost:3333/reactive';
 
   constructor(private http: HttpClient) {
   }
